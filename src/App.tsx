@@ -4,44 +4,99 @@
 //import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 
-type itemType={title: string,author:string,year:number,number_reviews:number,stars:number,id:number};
+type bookType={title: string,author:string,url:string,year:number,number_reviews:number,stars:number,id:number};
 //const client = generateClient<Schema>();
-const testdata:itemType[] =
-  [
-    {
-      title: 'random Title 1',
-      author: 'frodo',
-      year: 1750,
-      number_reviews: 3,
-      stars: 4,
-      id: 31,
-    },
-    {
-      title: 'random Title 2',
-      author: 'bilbo',
-      year: 1770,
-      number_reviews: 40,
-      stars: 5,
-      id: 20,
-    },
-  ];
 
-function itemlayout(item:itemType) {
-  return (<li> title {item.title} - author {item.author} </li>);
+type bookListPropsType = {
+  list:bookType[]; 
 }
-const List = ()=>{
-  return (<ul> {testdata.map((item)=>itemlayout(item))}</ul>);
+
+type bookPropsType = {
+  //note: there can be more arguments passed originally, but only those in the propstype will be accessible
+  //so the "key" might be given in the original call of the <Book /> tag, but the "key" property need not be defined in the bookPropsType
+  //It is then not accessible in <Book />
+  //  key: number;
+  book: bookType;
+}
+
+const Book = (bookProps:bookPropsType) => {
+  return (
+  <li key={bookProps.book.id}> 
+    <span>Title: <a href={bookProps.book.url}>{bookProps.book.title}</a></span>
+    <span> - - - </span>
+    <span>Author: <b>{bookProps.book.author}</b></span>
+  </li>);
+}
+
+const BookList = (props:bookListPropsType) => {
+  return (<ul> {props.list.map((book)=><Book key={book.id} book={book}/>)}</ul>);
+}
+
+const PageTitle = () => {
+  return (
+    <div>
+      <h1>Testpage React</h1>
+    </div>
+  );
+}
+
+
+const SearchField = () => {
+  const handleChange = (event: { target: { value: any; }; }) => {
+    console.log("event");
+    console.log(event);
+    console.log("target");
+    console.log(event.target);
+    console.log("value");
+    console.log(event.target.value);
+  }
+    return (
+    <div>
+      <label htmlFor="search">Search:</label>
+      <input id="search" type="text" onChange={handleChange}></input>
+    </div>
+  );
 }
 
 function App() {
+  const booklist:bookType[] =
+  [
+    {
+      title: 'lord of the rings',
+      author: 'sauron',
+      url: 'https://de.wikipedia.org/wiki/Sauron',
+      year: 1750,
+      number_reviews: 3,
+      stars: 4,
+      id: 1,
+    },
+    {
+      title: 'the hobbit',
+      author: 'bilbo',
+      url: 'https://de.wikipedia.org/wiki/Hobbit',
+      year: 1770,
+      number_reviews: 40,
+      stars: 5,
+      id: 2,
+    },
+    {
+      title: 'the ring bearer',
+      author: 'frodo',
+      url: 'https://de.wikipedia.org/wiki/Figuren_in_Tolkiens_Welt#Frodo_Beutlin',
+      year: 1790,
+      number_reviews: 4,
+      stars: 4.5,
+      id: 3,
+    },
+  ];
   return (
   <div>
-    <h1>Testpage React</h1>
-    <label htmlFor="search">Search:</label>
-    <input id="search" type="text"></input>
+    <PageTitle />
+    <SearchField />
     <hr />
-    <List />
+    <BookList list={booklist} />
   </div>);
+}
   /*
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
@@ -59,6 +114,7 @@ function App() {
     client.models.Todo.delete({ id });
   }
 
+  function App() {
   return (
     <Authenticator>
       {({ signOut, user }) => (
@@ -84,7 +140,7 @@ function App() {
       )}
     </Authenticator>
   );
-*/
 }
+*/
 
 export default App;
