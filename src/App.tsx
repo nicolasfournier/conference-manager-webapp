@@ -1,3 +1,4 @@
+import React from "react";
 //import { useEffect, useState } from "react";
 //import type { Schema } from "../amplify/data/resource";
 //import { generateClient } from "aws-amplify/data";
@@ -40,20 +41,24 @@ const PageTitle = () => {
   );
 }
 
+type searchPropsType = {
+  onSearch: (event:React.ChangeEvent<HTMLInputElement>)=> void;
+}
 
-const SearchField = () => {
-  const handleChange = (event: { target: { value: any; }; }) => {
-    console.log("event");
-    console.log(event);
-    console.log("target");
-    console.log(event.target);
-    console.log("value");
-    console.log(event.target.value);
-  }
+const SearchField = (searchProps:searchPropsType) => {
+  // const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => { /* (event: { target: { value: any; }; }) => {*/
+  //   console.log("event");
+  //   console.log(event);
+  //   console.log("target");
+  //   console.log(event.target);
+  //   console.log("value");
+  //   console.log(event.target.value);
+  //   searchProps.onSearch(event);
+  // }
     return (
     <div>
       <label htmlFor="search">Search:</label>
-      <input id="search" type="text" onChange={handleChange}></input>
+      <input id="search" type="text" onChange={searchProps.onSearch}></input>
     </div>
   );
 }
@@ -89,10 +94,15 @@ function App() {
       id: 3,
     },
   ];
+  const [searchState, setSearchState] = React.useState('');
+  const searchToAppCallback = (event:React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+//    setSearchState(event.target.value);
+  }
   return (
   <div>
     <PageTitle />
-    <SearchField />
+    <SearchField onSearch={searchToAppCallback}/>
     <hr />
     <BookList list={booklist} />
   </div>);
