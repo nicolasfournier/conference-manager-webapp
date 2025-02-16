@@ -5,8 +5,9 @@ import React from "react";
 //import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 
-type bookType={title: string,author:string,url:string,year:number,number_reviews:number,stars:number,id:number};
 //const client = generateClient<Schema>();
+
+type bookType={title: string,author:string,url:string,year:number,number_reviews:number,stars:number,id:number};
 
 type bookListPropsType = {
   list:bookType[]; 
@@ -95,16 +96,19 @@ function App() {
     },
   ];
   const [searchState, setSearchState] = React.useState('');
-  const searchToAppCallback = (event:React.ChangeEvent<HTMLInputElement>) => {
+  const searchChangeHandler = (event:React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
-//    setSearchState(event.target.value);
+    setSearchState(event.target.value);
   }
+
+  const filteredBooks = booklist.filter((book)=>{return book.title.includes(searchState)});
+
   return (
   <div>
     <PageTitle />
-    <SearchField onSearch={searchToAppCallback}/>
+    <SearchField onSearch={searchChangeHandler}/>
     <hr />
-    <BookList list={booklist} />
+    <BookList list={filteredBooks} />
   </div>);
 }
   /*
