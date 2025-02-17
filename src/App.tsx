@@ -101,7 +101,7 @@ function App() {
     setSearchState(event.target.value);
   }
 
-  const filteredBooks = booklist.filter((book)=>{return book.title.includes(searchState)});
+  const filteredBooks = booklist.filter((book)=>{return book.title.toLowerCase().includes(searchState.toLowerCase())});
 
   return (
   <div>
