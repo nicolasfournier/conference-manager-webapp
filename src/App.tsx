@@ -7,14 +7,14 @@ import "@aws-amplify/ui-react/styles.css";
 
 //const client = generateClient<Schema>();
 
-type BookType = { title: string, author: string, url: string, year: number, number_reviews: number, stars: number, id: number }
+type Book = { title: string, author: string, url: string, year: number, number_reviews: number, stars: number, id: number }
 
 //note: there can be more arguments passed originally, but only those in the propstype will be accessible
 //so the "key" might be given in the original call of the <Book /> tag, but the "key" property need not be defined in the bookPropsType
 //It is then not accessible in <Book />
 //  key: number;
-type BookPropsType = { book: BookType }
-const Book = ({ book }: BookPropsType) => {
+type BookProps = { book: Book }
+const BookListItem = ({ book }: BookProps) => {
   return (
     <li key={book.id}>
       <span>Title: <a href={book.url}>{book.title}</a></span>
@@ -37,14 +37,14 @@ const Book2 = ({ title, author, url, id }: book2PropsType) => {
 }
 */
 
-type BookListPropsType = { list: BookType[] }
-const BookList = ({ list }: BookListPropsType) => {
-  return (<ul> {list.map((book) => <Book key={book.id} book={book} />)}</ul>);
+type BookListProps = { list: Book[] }
+const BookList = ({ list }: BookListProps) => {
+  return (<ul> {list.map((book) => <BookListItem key={book.id} book={book} />)}</ul>);
   //  return (<ul> {list.map((book)=><Book2 key={book.id} title={book.title}  author={book.author}  url={book.url}  id={book.id}/>)}</ul>);
 }
 
-type PageTitlePropsType = { title: string }
-const PageTitle = ({ title }: PageTitlePropsType) => {
+type PageTitleProps = { title: string }
+const PageTitle = ({ title }: PageTitleProps) => {
   return (
     <div>
       <h1>{title}</h1>
@@ -52,18 +52,18 @@ const PageTitle = ({ title }: PageTitlePropsType) => {
   );
 }
 
-type SearchPropsType = { onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void }
-const SearchField = ({ onSearch }: SearchPropsType) => {
+type SearchProps = { searchTerm:string, onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void }
+const SearchField = ({ searchTerm, onSearchChange }: SearchProps) => {
   return (
     <div>
       <label htmlFor="search">Search:</label>
-      <input id="search" type="text" onChange={onSearch}></input>
+      <input id="search" type="text" value={searchTerm} onChange={onSearchChange}></input>
     </div>
   );
 }
 
 function App() {
-  const booklist: BookType[] =
+  const booklist: Book[] =
     [
       {
         title: 'lord of the rings',
@@ -93,18 +93,28 @@ function App() {
         id: 3,
       },
     ];
-  const [searchState, setSearchState] = React.useState('');
+  const [searchState, setSearchState] = React.useState(localStorage.getItem('searchTerm') || 'ring');
   const searchChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
     setSearchState(event.target.value);
   }
+  //we could have updated the stored state ouselves at every callback
+  //but instead we tie the update to any change to the searchState React-state variable
+  //whenever that variable gets updated, the provided function is called, inthis case a side-effect
+  //this ensures that even when the state variable gets updated in another callback, for some other
+  //reason, the side-effect still gets executed 
+  React.useEffect(
+    ()=>{localStorage.setItem('searchTerm', searchState);},
+    [searchState]
+  );
 
+  //the filteredBooks get reevaluated at each refresh of the DOM, despite being a const.
   const filteredBooks = booklist.filter((book) => { return book.title.toLowerCase().includes(searchState.toLowerCase()) });
-
+  const previousSearchTerm=localStorage.getItem('searchTerm');
   return (
     <div>
       <PageTitle title="React Testpage Title" />
-      <SearchField onSearch={searchChangeHandler} />
+      <SearchField searchTerm={searchState} onSearchChange={searchChangeHandler} />
       <hr />
       <BookList list={filteredBooks} />
     </div>);
