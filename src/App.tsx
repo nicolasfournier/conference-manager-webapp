@@ -13,13 +13,14 @@ type Book = { title: string, author: string, url: string, year: number, number_r
 //so the "key" might be given in the original call of the <Book /> tag, but the "key" property need not be defined in the bookPropsType
 //It is then not accessible in <Book />
 //  key: number;
-type BookProps = { book: Book }
-const BookListItem = ({ book }: BookProps) => {
+type BookProps = { book: Book , deleteHandler: (bookToDelete:Book)=> void }
+const BookListItem = ({ book, deleteHandler }: BookProps) => {
   return (
     <li key={book.id}>
       <span>Title: <a href={book.url}>{book.title}</a></span>
       <span> - - - </span>
       <span>Author: <b>{book.author}</b></span>
+      <button type="button" onClick={()=>deleteHandler(book)}>delete item</button>
     </li>);
 }
 
@@ -37,9 +38,9 @@ const Book2 = ({ title, author, url, id }: book2PropsType) => {
 }
 */
 
-type BookListProps = { list: Book[] }
-const BookList = ({ list }: BookListProps) => {
-  return (<ul> {list.map((book) => <BookListItem key={book.id} book={book} />)}</ul>);
+type BookListProps = { list: Book[] , deleteHandler: (bookToDelete:Book)=> void }
+const BookList = ({ list, deleteHandler }: BookListProps) => {
+  return (<ul> {list.map((book) => <BookListItem key={book.id} book={book} deleteHandler={deleteHandler} />)}</ul>);
   //  return (<ul> {list.map((book)=><Book2 key={book.id} title={book.title}  author={book.author}  url={book.url}  id={book.id}/>)}</ul>);
 }
 
@@ -52,7 +53,7 @@ const PageTitle = ({ title }: PageTitleProps) => {
   );
 }
 
-type SearchProps = { searchTerm:string, onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void }
+type SearchProps = { searchTerm: string, onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void }
 const SearchField = ({ searchTerm, onSearchChange }: SearchProps) => {
   return (
     <div>
@@ -63,7 +64,7 @@ const SearchField = ({ searchTerm, onSearchChange }: SearchProps) => {
 }
 
 function App() {
-  const booklist: Book[] =
+  const initialbooklist: Book[] =
     [
       {
         title: 'lord of the rings',
@@ -98,25 +99,29 @@ function App() {
     console.log(event.target.value);
     setSearchState(event.target.value);
   }
+  const [booklist, setBooklist] = React.useState(initialbooklist);
+  const deleteHandler = (bookItemToDelete:Book) => {
+    setBooklist(booklist.filter((book) => { return book.id !== bookItemToDelete.id}));
+  }
+
   //we could have updated the stored state ouselves at every callback
   //but instead we tie the update to any change to the searchState React-state variable
   //whenever that variable gets updated, the provided function is called, inthis case a side-effect
   //this ensures that even when the state variable gets updated in another callback, for some other
   //reason, the side-effect still gets executed 
   React.useEffect(
-    ()=>{localStorage.setItem('searchTerm', searchState);},
+    () => { localStorage.setItem('searchTerm', searchState); },
     [searchState]
   );
 
   //the filteredBooks get reevaluated at each refresh of the DOM, despite being a const.
   const filteredBooks = booklist.filter((book) => { return book.title.toLowerCase().includes(searchState.toLowerCase()) });
-  const previousSearchTerm=localStorage.getItem('searchTerm');
   return (
     <div>
       <PageTitle title="React Testpage Title" />
       <SearchField searchTerm={searchState} onSearchChange={searchChangeHandler} />
       <hr />
-      <BookList list={filteredBooks} />
+      <BookList list={filteredBooks} deleteHandler={deleteHandler}/>
     </div>);
 }
 
