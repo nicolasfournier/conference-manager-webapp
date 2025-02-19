@@ -1,11 +1,24 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import { Authenticator } from "@aws-amplify/ui-react";
+//import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
+import NavigationBar from "./UI/NavigationBar";
+import { BrowserRouter } from "react-router-dom";
 
 const client = generateClient<Schema>();
 
+function App() {
+  const [mystate, setMystate] = React.useState('');
+  return (
+    <BrowserRouter>
+      <NavigationBar />
+      {/* Rest of your app content goes here */}
+    </BrowserRouter>
+  );
+}
+
+/*
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
@@ -49,5 +62,5 @@ function App() {
     </Authenticator>
   );
 }
-
+*/
 export default App;
