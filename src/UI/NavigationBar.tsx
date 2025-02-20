@@ -1,5 +1,7 @@
 import React from 'react';
 import './NavigationBar.css';
+import { FaRegUserCircle } from "react-icons/fa";
+import { Link, NavLink } from "react-router-dom";
 
 const Brand = () => {
   return (
@@ -10,30 +12,30 @@ const Brand = () => {
 }
 
 const NavigationBar = () => {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   return (
-    <nav className="navigationbar">
-      <div className="navigationbar-left">
-        <a href="/" className="logo">
-          ShopNow
-        </a>
-      </div>
-      <div className="navigationbar-center">
-        <ul className="navigation-links">
-          <li><a href="/products">Products</a></li>
-          <li><a href="/about">About Us</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-      </div>
-      <div className="navigationbar-right">
-        <a href="/cart" className="cart-icon">
-          <i className="fas fa-shopping-cart"></i>
-          <span className="cart-count">0</span>
-        </a>
-        <a href="/account" className="user-icon">
-          <i className="fas fa-user"></i>
-        </a>
-      </div>
-    </nav>
+      <nav className="navigationbar">
+        <div className="navigationbar-left">
+        </div>
+        <div className="navigationbar-center">
+          <ul className="navigation-links">
+            <li><a href="/overview">Overview</a></li>
+            <li><a href="/programme">Programme</a></li>
+            <li><a href="/venue">Venue/Travel</a></li>
+            <li><a href="/actions">Actions</a>
+            <ul>
+            <li>Login</li>
+            <li>Conference Registration</li>
+            <li>Submit / Manage my Submissions</li>
+            </ul>
+            </li>
+            <li><a href="/language"><FaRegUserCircle /></a></li>
+          </ul>
+        </div>
+        <div className="navigationbar-right">
+        </div>
+      </nav>
   );
 };
 

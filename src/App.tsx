@@ -4,6 +4,7 @@ import { generateClient } from "aws-amplify/data";
 //import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import NavigationBar from "./UI/NavigationBar";
+import ConferenceLogo from "./UI/ConferenceLogo";
 import { BrowserRouter } from "react-router-dom";
 
 const client = generateClient<Schema>();
@@ -11,10 +12,13 @@ const client = generateClient<Schema>();
 function App() {
   const [mystate, setMystate] = React.useState('');
   return (
-    <BrowserRouter>
+    <>
+      <BrowserRouter>
+      <ConferenceLogo />
       <NavigationBar />
-      {/* Rest of your app content goes here */}
-    </BrowserRouter>
+        {/* Rest of your app content goes here */}
+      </BrowserRouter>
+    </>
   );
 }
 
