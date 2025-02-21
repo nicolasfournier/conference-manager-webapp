@@ -13,8 +13,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Overview', 'Programme', 'Venue'];
+const settings = ['Login', 'Profile', 'Conerence Registration', 'Submit / Manage my Submissions', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -27,8 +27,11 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  type SelectedMenuItemEvent = React.MouseEvent<HTMLLIElement, MouseEvent> | React.MouseEvent<HTMLButtonElement, MouseEvent>;
+  type HandleCloseNavMenu = { page: string, event: SelectedMenuItemEvent}
+  const handleCloseNavMenu = ({ page, event }: HandleCloseNavMenu) => {
     setAnchorElNav(null);
+    console.log(page + ' clicked - we should load a webpage instead');
   };
 
   const handleCloseUserMenu = () => {
@@ -39,7 +42,16 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Box component="img"
+            sx={{
+              height: 233,
+              width: 350,
+              maxHeight: { xs: 233, md: 67 },
+              maxWidth: { xs: 350, md: 250 },
+            }}
+            alt="conference logo"
+            src="./src/UI/logo-wood-broad.jpg"
+          />
           <Typography
             variant="h6"
             noWrap
@@ -55,7 +67,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -86,7 +98,7 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={(event) => {handleCloseNavMenu({page, event})}}>
                   <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -115,7 +127,7 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={(event) => {handleCloseNavMenu({page, event})}}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -125,7 +137,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Username" src="./src/UI/logo-wood.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
