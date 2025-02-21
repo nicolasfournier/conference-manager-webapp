@@ -6,8 +6,19 @@ import App from "./App.tsx";
 //import outputs from "../amplify_outputs.json";
 //Amplify.configure(outputs);
 
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme';
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
     <App />
-  </React.StrictMode>
+  </ThemeProvider>,
 );
+
+/*
+<React.StrictMode>
+<App />
+</React.StrictMode>
+*/
