@@ -13,10 +13,31 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Overview', 'Programme', 'Venue'];
-const settings = ['Login', 'Profile', 'Conerence Registration', 'Submit / Manage my Submissions', 'Logout'];
+import { NavLink } from "react-router-dom";
 
-function ResponsiveAppBar() {
+type Page = { title: string, path: string, content: string };
+const pages: Page[] = [
+  {
+    title: 'Overview',
+    path: '/page/overview',
+    content: 'This is the content of the Overview page',
+  },
+  {
+    title: 'Programme',
+    path: '/page/programmme',
+    content: 'This is the content of the Programme page',
+  },
+  {
+    title: 'Venue',
+    path: '/page/venue',
+    content: 'This is the content of the Venue page',
+  },
+];
+
+const settings = ['Login', 'Profile', 'Conference Registration', 'Submit / Manage my Submissions', 'Logout'];
+
+type ResponsiveAppBarType = { setPageContentsHandler: (content: string) => void; };
+function ResponsiveAppBar({ setPageContentsHandler }: ResponsiveAppBarType) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -27,31 +48,36 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  type SelectedMenuItemEvent = React.MouseEvent<HTMLLIElement, MouseEvent> | React.MouseEvent<HTMLButtonElement, MouseEvent>;
-  type HandleCloseNavMenu = { page: string, event: SelectedMenuItemEvent}
+  type SelectedMenuItemEvent = React.MouseEvent<HTMLLIElement, MouseEvent> | React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLAnchorElement, MouseEvent>;
+  type HandleCloseNavMenu = { page: Page, event: SelectedMenuItemEvent }
   const handleCloseNavMenu = ({ page, event }: HandleCloseNavMenu) => {
     setAnchorElNav(null);
-    console.log(page + ' clicked - we should load a webpage instead');
+    setPageContentsHandler(page.content);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
+  /*
+  import Routes from './Routes';
+  const activeRoute = (routeName: string) => {
+    return props.location.pathname === routeName ? true : false;
+
+            Routes.map((elem) => {
+                <NavLink to={elem.path} style={{ textDecoration: 'none' }} key={key}>
+                  <MenuItem selected={activeRoute(elem.path)}>
+                    <ListItemText primary={elem.navbarName} />
+                  </MenuItem>
+                </NavLink>
+            })
+
+    }
+*/
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box component="img"
-            sx={{
-              height: 233,
-              width: 350,
-              maxHeight: { xs: 233, md: 67 },
-              maxWidth: { xs: 350, md: 250 },
-            }}
-            alt="conference logo"
-            src="./src/UI/logo-wood-broad.jpg"
-          />
           <Typography
             variant="h6"
             noWrap
@@ -67,6 +93,16 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
+            <Box component="img"
+              sx={{
+                height: 233,
+                width: 350,
+                maxHeight: { xs: 233, md: 67 },
+                maxWidth: { xs: 350, md: 250 },
+              }}
+              alt="conference logo"
+              src="./src/UI/logo-wood-broad.jpg"
+            />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -97,8 +133,8 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={(event) => {handleCloseNavMenu({page, event})}}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                <MenuItem key={page.title} onClick={(event) => { handleCloseNavMenu({ page, event }) }}>
+                  <Typography sx={{ textAlign: 'center' }}>{page.title}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -120,17 +156,20 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            CONF LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={(event) => {handleCloseNavMenu({page, event})}}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
+              <NavLink to={page.path} style={{ textDecoration: 'none' }} key={page.title}>
+                <Button
+                  key={page.title}
+                  onClick={(event) => { handleCloseNavMenu({ page, event }) }}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page.title}
+                </Button>
+              </NavLink>
+
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
