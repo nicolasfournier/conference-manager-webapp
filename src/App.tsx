@@ -5,12 +5,39 @@ import Box from '@mui/material/Box';
 import ResponsiveAppBar from './UI/ResponsiveAppBar';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+//get the data client and data structures
+import type { Schema } from "../amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+//get the default login tool
+import { Authenticator } from "@aws-amplify/ui-react";
+//import "@aws-amplify/ui-react/styles.css";
+
+const client = generateClient<Schema>();
 
 export default function App() {
   const [pageContents, setPageContents] = React.useState('');
   const handlePageSelection = (newcontents: string) => {
     setPageContents(newcontents);
   }
+
+  //not entirely sure how to best code this
+  //the example puts a fuction in the Authenticator
+  //    {
+  //      ({ signOut, user }) => 
+  //        ( 
+  //     ...lots of html page text only accessible after login
+  //        )
+  //    }
+  // it could be that the Authenticator calls this in some way
+
+  const handleLogin = () => {
+    return (
+    <Authenticator>
+    </Authenticator>
+    );
+  }
+
+
 
   function ContentLoader() {
     return (
