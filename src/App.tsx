@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ResponsiveAppBar from './UI/ResponsiveAppBar';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ContentManagement from './UI/ContentManagement'
 
 //get the data client and data structures
 import type { Schema } from "../amplify/data/resource";
@@ -32,27 +33,43 @@ export default function App() {
 
   const handleLogin = () => {
     return (
-    <Authenticator>
-    </Authenticator>
+      <Authenticator>
+      </Authenticator>
     );
   }
 
 
 
   function ContentLoader() {
-    return (
-      <Typography
-        variant="body2"
-        align="center"
-        sx={{
-          color: 'text.secondary',
-        }}
-      >
-        {pageContents}
-      </Typography>
-    );
+    if (pageContents === "CMS") {
+      return (
+        <ContentManagement />
+      );
+    } else {
+      return (
+        <Typography
+          variant="body2"
+          align="center"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
+          {pageContents}
+        </Typography>
+      );
+    }
   }
-
+  /*
+        <Typography
+          variant="body2"
+          align="center"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
+          {pageContents}
+        </Typography>
+        */
   /* NOT SURE HOW TO PROPERLY USE THE ROUTES, BUT 
      IT DOESN'T WORK WITHOUT THE BROWSERROUTER
   */

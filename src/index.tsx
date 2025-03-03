@@ -5,10 +5,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import App from './App';
 import theme from './theme';
 
-import { Amplify } from 'aws-amplify';
-import outputs from '../amplify_outputs.json';
+//import { Amplify } from 'aws-amplify';
+//import outputs from '../amplify_outputs.json';
 
-Amplify.configure(outputs);
+//Amplify.configure(outputs);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

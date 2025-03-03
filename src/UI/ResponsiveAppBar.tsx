@@ -12,6 +12,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import ContentManagement from './UI/ContentManagement'
+
 
 import { NavLink } from "react-router-dom";
 
@@ -61,7 +63,7 @@ const settings: Setting[] = [
     id: 1004,
     title: 'Content Management',
     path: '/setting/contentmanagement',
-    content: 'This is the content of the Content Management option --  only visible to special Roles --',
+    content: 'CMS',
   },
   {
     id: 1005,
@@ -197,13 +199,13 @@ function ResponsiveAppBar({ setPageContentsHandler }: ResponsiveAppBarType) {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-                <Button
-                  key={page.id}
-                  onClick={(event) => { handleCloseNavMenu({ page, event }) }}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page.title}
-                </Button>
+              <Button
+                key={page.id}
+                onClick={(event) => { handleCloseNavMenu({ page, event }) }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {page.title}
+              </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
