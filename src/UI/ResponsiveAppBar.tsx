@@ -15,26 +15,61 @@ import AdbIcon from '@mui/icons-material/Adb';
 
 import { NavLink } from "react-router-dom";
 
-type Page = { title: string, path: string, content: string };
+type Page = { id: number, title: string, path: string, content: string };
 const pages: Page[] = [
   {
+    id: 1,
     title: 'Overview',
     path: '/page/overview',
     content: 'This is the content of the Overview page',
   },
   {
+    id: 2,
     title: 'Programme',
     path: '/page/programmme',
     content: 'This is the content of the Programme page',
   },
   {
+    id: 3,
     title: 'Venue',
     path: '/page/venue',
     content: 'This is the content of the Venue page',
   },
 ];
 
-const settings = ['Login', 'Profile', 'Conference Registration', 'Submit / Manage my Submissions', 'Logout'];
+type Setting = { id: number, title: string, path: string, content: string };
+const settings: Setting[] = [
+  {
+    id: 1001,
+    title: 'Login',
+    path: '/setting/login',
+    content: 'This is the content of the Login option',
+  },
+  {
+    id: 1002,
+    title: 'My Profile',
+    path: '/setting/profile',
+    content: 'This is the content of the Profile option',
+  },
+  {
+    id: 1003,
+    title: 'My Submissions',
+    path: '/setting/submissions',
+    content: 'This is the content of the Submissions option',
+  },
+  {
+    id: 1004,
+    title: 'Content Management',
+    path: '/setting/contentmanagement',
+    content: 'This is the content of the Content Management option --  only visible to special Roles --',
+  },
+  {
+    id: 1005,
+    title: 'Logout',
+    path: '/setting/logout',
+    content: 'This is the content of the Logout option',
+  },
+];
 
 type ResponsiveAppBarType = { setPageContentsHandler: (content: string) => void; };
 function ResponsiveAppBar({ setPageContentsHandler }: ResponsiveAppBarType) {
@@ -55,8 +90,10 @@ function ResponsiveAppBar({ setPageContentsHandler }: ResponsiveAppBarType) {
     setPageContentsHandler(page.content);
   };
 
-  const handleCloseUserMenu = () => {
+  type HandleCloseUserMenu = { setting: Setting, event: SelectedMenuItemEvent }
+  const handleCloseUserMenu = ({ setting, event }: HandleCloseUserMenu) => {
     setAnchorElUser(null);
+    setPageContentsHandler(setting.content);
   };
 
   /*
@@ -160,16 +197,13 @@ function ResponsiveAppBar({ setPageContentsHandler }: ResponsiveAppBarType) {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <NavLink to={page.path} style={{ textDecoration: 'none' }} key={page.title}>
                 <Button
-                  key={page.title}
+                  key={page.id}
                   onClick={(event) => { handleCloseNavMenu({ page, event }) }}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   {page.title}
                 </Button>
-              </NavLink>
-
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
@@ -195,8 +229,8 @@ function ResponsiveAppBar({ setPageContentsHandler }: ResponsiveAppBarType) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                <MenuItem key={setting.title} onClick={(event) => handleCloseUserMenu({ setting, event })}>
+                  <Typography sx={{ textAlign: 'center' }}>{setting.title}</Typography>
                 </MenuItem>
               ))}
             </Menu>
