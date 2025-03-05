@@ -7,11 +7,107 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-    })
+  Event: a.model({
+    eventID: a.id().required(),
+    title: a.string(),
+    eventType: a.string(),
+    logoImage: a.url(),
+    location: a.string(),
+    pages: a.hasMany('Page', 'pageID'),
+    products: a.hasMany('Product', 'productID'),
+    chair: a.string().array(),
+    theme: a.string(),
+    roleManager: a.string().array(),
+    contentsEditor: a.string().array(),
+    availableLanguages: a.string().array(),
+    language: a.string(),
+  })
     .authorization((allow) => [allow.owner()]),
+
+  Page: a.model({
+    pageID: a.id().required(),
+    partOfEvent: a.belongsTo('Event', 'eventID'),
+    pageTitle: a.string(),
+    pageContent: a.string(),
+    language: a.string(),
+  })
+    .authorization((allow) => [allow.owner()]),
+
+  Product: a.model({
+    productID: a.id().required(),
+    partOfEvent: a.belongsTo('Event', 'eventID'),
+    title: a.string(),
+    type: a.string(),
+    description: a.string(),
+    chair: a.string().array(),
+    date: a.date(),
+    time: a.time(),
+    location: a.string(),
+    registrationDeadline: a.date(),
+    submission: a.hasMany('SubmissionType', 'submissionTypeID'),
+    price: a.float(),
+    priceCurrency: a.string(),
+    priceDescription: a.string(),
+    priceDeadline: a.date(),
+    price1: a.float(),
+    price1Currency: a.string(),
+    price1Description: a.string(),
+    price1Deadline: a.date(),
+    price2: a.float(),
+    price2Currency: a.string(),
+    price2Description: a.string(),
+    price2Deadline: a.date(),
+    price3: a.float(),
+    price3Currency: a.string(),
+    price3Description: a.string(),
+    price3Deadline: a.date(),
+    language: a.string(),
+  })
+    .authorization((allow) => [allow.owner()]),
+
+  SubmissionType: a.model({
+    submissionTypeID: a.id().required(),
+    forProduct: a.belongsTo('Product', 'productID'),
+    submissionTypeName: a.string(),
+    description: a.string(),
+    required: a.boolean(),
+    callForSubmission: a.string(),
+    reviewScheme: a.string(),
+    submissionDeadlineDate: a.date(),
+    submissionDeadlineTime: a.time(),
+    reviewDealine: a.date(),
+    acceptanceNotificationDate: a.date(),
+    submissions: a.hasMany('Submission', 'submissionID'),
+    language: a.string(),
+  })
+    .authorization((allow) => [allow.owner()]),
+
+  Submission: a.model({
+    submissionID: a.id().required(),
+    submissionType: a.belongsTo('SubmissionType', 'submissionTypeID'),
+    title: a.string(),
+    contributor: a.string(),
+    document: a.url(),
+    filingDate: a.date(),
+    filingTime: a.time(),
+    review: a.hasMany('Review', 'reviewID'),
+    accepted: a.boolean(),
+    language: a.string(),
+  })
+    .authorization((allow) => [allow.owner()]),
+
+  Review: a.model({
+    reviewID: a.id().required(),
+    submission: a.belongsTo('Submission', 'submissionID'),
+    reviewer: a.string(),
+    review: a.string(),
+    filingDate: a.date(),
+    filingTime: a.time(),
+    recommendAcceptance: a.boolean(),
+    language: a.string(),
+  })
+    .authorization((allow) => [allow.owner()]),
+
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -32,7 +128,7 @@ Go to your frontend source code. From your client-side code, generate a
 Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
 WORK IN THE FRONTEND CODE FILE.)
 
-Using JavaScript or Next.js React Server Components, Middleware, Server 
+Using JavaScript or Next.js React Server Components, Middleware, Server
 Actions or Pages Router? Review how to generate Data clients for those use
 cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
 =========================================================================*/
