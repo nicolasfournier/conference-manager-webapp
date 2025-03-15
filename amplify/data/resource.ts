@@ -1,10 +1,50 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
 /*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
-adding a new "isDone" field as a boolean. The authorization rule below
-specifies that any user authenticated via an API key can "create", "read",
-"update", and "delete" any "Todo" records.
+Here we define the entire DB structure.
+
+The "Event" contains the top-level data of the event.  
+The Event is the root of the tree describing general parameters of the entire Conference.
+The Event further comprises "Page"s and "Product"s.
+The Event alsom comprises two fields that are particularly important for 
+managing the conference: the chair (string[]), and the roleManager (string[]).
+The names (or better: unique userIDs) recorded there will have special rights in editing 
+the data and to manage the access rights of others.
+
+Each "Page" is a general description page of the website, and just provide a nice 
+general description of the Event.  E.g. "Overview", "Programme", "Venue", "Contact and Support"
+
+Each "Product" is a part of the Event, for which participants can subscribe, 
+and to which participants can possibly submit some contributions.
+Each Product may contain further "SubmissionType"s that each describe a possible 
+contribution, that the participants can upload, and which can then be reviewed 
+and either accepted or rejected.
+Each Product can have several "Price"s associated with it, to allow different rates
+for normal participants, volunteers, students, earlybirds, late registrations, etc
+Each Product can have several "Option"s.  This allows the selection of some specific
+service.  E.g. when registering for a dinner, to select a type of menu, or to tick 
+a box that allows entering freetext for special needs. 
+
+E.g. for a conference, there should be at least one Product, the conference itself, 
+so that participants can register for the conference.  If such a product is not provided, 
+then the pages still provide a general description of the entire event, but no
+submissions are possible. 
+The conference-product itself can then accept a certain number of different types of 
+submissions, declared as "SubmissionType"s.  E.g. any registered participant can 
+choose to submit one or nore papers for the main track, or papers for a special 
+session, and posters for a poster session. The "main track", "special session" and 
+"posters" would be the allowed SubmissionTypes, and each such SubmissionType can have 
+its own review scheme.
+
+Sometimes, it would be useful to require separate registration for certain events 
+(different Workshops, Sessions, Courses, Exhibition, Gala-event, etc), either to 
+be able to manage/limit the number of paticipants, to charge a separate fee, or 
+simply to clarify that these are entirely seperate (sub-)events.
+In this case, seperate "Products" should be created.  This allows fine-grained control 
+of the separate sub-events. These may or may not require additional payment.  As each 
+sub-event is also just a "Product", it can then also allow submissions of any desired
+type. 
+
 =========================================================================*/
 const schema = a.schema({
   Event: a.model({
@@ -21,6 +61,7 @@ const schema = a.schema({
     contentsEditor: a.string().array(),
     availableLanguages: a.string().array(),
     language: a.string(),
+    jsonobject: a.string(),
   })
     .authorization((allow) => [allow.owner()]),
 
@@ -30,6 +71,7 @@ const schema = a.schema({
     pageTitle: a.string(),
     pageContent: a.string(),
     language: a.string(),
+    jsonobject: a.string(),
   })
     .authorization((allow) => [allow.owner()]),
 
@@ -43,25 +85,39 @@ const schema = a.schema({
     date: a.date(),
     time: a.time(),
     location: a.string(),
-    registrationDeadline: a.date(),
+    minParticipants: a.integer(),
+    maxParticipants: a.integer(),
+    registrationStartDate: a.date(),
+    registrationEndDate: a.date(),
+    option: a.hasMany('Option', 'optionID'),
+    minNumberOfOptionsToSelect: a.integer(),
+    maxNumberOfOptionsToSelect: a.integer(),
     submission: a.hasMany('SubmissionType', 'submissionTypeID'),
-    price: a.float(),
-    priceCurrency: a.string(),
-    priceDescription: a.string(),
-    priceDeadline: a.date(),
-    price1: a.float(),
-    price1Currency: a.string(),
-    price1Description: a.string(),
-    price1Deadline: a.date(),
-    price2: a.float(),
-    price2Currency: a.string(),
-    price2Description: a.string(),
-    price2Deadline: a.date(),
-    price3: a.float(),
-    price3Currency: a.string(),
-    price3Description: a.string(),
-    price3Deadline: a.date(),
+    price: a.hasMany('Price', 'priceID'),
     language: a.string(),
+    jsonobject: a.string(),
+  })
+    .authorization((allow) => [allow.owner()]),
+
+  Option: a.model({
+    optionID: a.id().required(),
+    forProduct: a.belongsTo('Product', 'productID'),
+    description: a.string(),
+    language: a.string(),
+    jsonobject: a.string(),
+  })
+    .authorization((allow) => [allow.owner()]),
+
+  Price: a.model({
+    priceID: a.id().required(),
+    forProduct: a.belongsTo('Product', 'productID'),
+    amount: a.float(),
+    currency: a.string(),
+    description: a.string(),
+    startDate: a.date(),
+    endDate: a.date(),
+    language: a.string(),
+    jsonobject: a.string(),
   })
     .authorization((allow) => [allow.owner()]),
 
@@ -79,6 +135,7 @@ const schema = a.schema({
     acceptanceNotificationDate: a.date(),
     submissions: a.hasMany('Submission', 'submissionID'),
     language: a.string(),
+    jsonobject: a.string(),
   })
     .authorization((allow) => [allow.owner()]),
 
@@ -94,6 +151,7 @@ const schema = a.schema({
     review: a.hasMany('Review', 'reviewID'),
     accepted: a.boolean(),
     language: a.string(),
+    jsonobject: a.string(),
   })
     .authorization((allow) => [allow.owner()]),
 
@@ -106,6 +164,7 @@ const schema = a.schema({
     filingTime: a.time(),
     recommendAcceptance: a.boolean(),
     language: a.string(),
+    jsonobject: a.string(),
   })
     .authorization((allow) => [allow.owner()]),
 
