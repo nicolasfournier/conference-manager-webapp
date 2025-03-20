@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 //import TextareaAutosize from '@mui/base/TextareaAutosize';
 import TextField from '@mui/material/TextField';
 import CreateNewPage from './CreateNewPage';
-
+import EditExistingPages from './EditExistingPages'
 //get the data client and data structures
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
@@ -15,7 +15,7 @@ import { Authenticator } from "@aws-amplify/ui-react";
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
 //import "@aws-amplify/ui-react/styles.css";
 
-const client = generateClient<Schema>();
+/* const client = generateClient<Schema>();*/
 
 //provide a page with textfields and image uploads for all the normal website contents
 //also a drop-down list to select from some templates
@@ -24,7 +24,7 @@ function ContentManagement() {
     /*get all pages from the DB and create a new set of TextFields and buttons for it*/
     return (
         <>
-            <ExistingPages></ExistingPages>
+            <EditExistingPages></EditExistingPages>
             <CreateNewPage></CreateNewPage>
         </>
     );
