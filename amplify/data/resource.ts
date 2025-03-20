@@ -63,6 +63,7 @@ const schema = a.schema({
     language: a.string(),
     jsonobject: a.string(),
   })
+    .identifier(['eventID'])
     .authorization((allow) => [allow.owner()]),
 
   Page: a.model({
@@ -73,6 +74,7 @@ const schema = a.schema({
     language: a.string(),
     jsonobject: a.string(),
   })
+    .identifier(['pageID'])
     .authorization((allow) => [allow.owner()]),
 
   Product: a.model({
@@ -97,6 +99,7 @@ const schema = a.schema({
     language: a.string(),
     jsonobject: a.string(),
   })
+    .identifier(['productID'])
     .authorization((allow) => [allow.owner()]),
 
   Option: a.model({
@@ -106,6 +109,7 @@ const schema = a.schema({
     language: a.string(),
     jsonobject: a.string(),
   })
+    .identifier(['optionID'])
     .authorization((allow) => [allow.owner()]),
 
   Price: a.model({
@@ -119,6 +123,7 @@ const schema = a.schema({
     language: a.string(),
     jsonobject: a.string(),
   })
+    .identifier(['priceID'])
     .authorization((allow) => [allow.owner()]),
 
   SubmissionType: a.model({
@@ -137,6 +142,7 @@ const schema = a.schema({
     language: a.string(),
     jsonobject: a.string(),
   })
+    .identifier(['submissionTypeID'])
     .authorization((allow) => [allow.owner()]),
 
   Submission: a.model({
@@ -153,6 +159,7 @@ const schema = a.schema({
     language: a.string(),
     jsonobject: a.string(),
   })
+    .identifier(['submissionID'])
     .authorization((allow) => [allow.owner()]),
 
   Review: a.model({
@@ -166,6 +173,7 @@ const schema = a.schema({
     language: a.string(),
     jsonobject: a.string(),
   })
+    .identifier(['reviewID'])
     .authorization((allow) => [allow.owner()]),
 
 });
