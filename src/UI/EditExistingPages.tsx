@@ -11,7 +11,6 @@ const client = generateClient<Schema>();
 /*-----------------------------*/
 
 function SavePage(index: number) {
-    /* need to write code to distinguish the different TextFields - thre is a way to get all HTMLElements of the same type and access them as an array.  Or add an index at the end of each name */
     const existingPageID: string = (document.getElementById('pageIDTextField-'+{index}) as HTMLInputElement).value;
     const parentID: string = (document.getElementById('parentIDTextField-'+{index}) as HTMLInputElement).value;
     const title: string = (document.getElementById('pageTitleTextField-'+{index}) as HTMLInputElement).value;
@@ -92,7 +91,6 @@ function EditExistingPages() {
                 </>
             ))}
         </>
-
     );
 }
 export default EditExistingPages;

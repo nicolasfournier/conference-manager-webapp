@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import CreateNewPage from './CreateNewPage';
 import EditExistingPages from './EditExistingPages'
+import EditEventData from './EditEventData'
 //get the data client and data structures
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
@@ -24,6 +25,7 @@ function ContentManagement() {
     /*get all pages from the DB and create a new set of TextFields and buttons for it*/
     return (
         <>
+            <EditEventData></EditEventData>
             <EditExistingPages></EditExistingPages>
             <CreateNewPage></CreateNewPage>
         </>
