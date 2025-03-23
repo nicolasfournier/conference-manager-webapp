@@ -2,6 +2,10 @@ import Button from '@mui/material/Button';
 //import TextareaAutosize from '@mui/base/TextareaAutosize';
 import TextField from '@mui/material/TextField';
 
+import { Amplify } from "aws-amplify";
+import outputs from "../../amplify_outputs.json";
+Amplify.configure(outputs);
+
 /*-----------------------------*/
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
@@ -13,26 +17,26 @@ function genUniqueId(): string {
     return `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 8)}`;
 }
 
-function SaveNewPage() {
-    const title: string = (document.getElementById('titleTextField') as HTMLInputElement).value;
-    const content: string = (document.getElementById('contentTextField') as HTMLInputElement).value;
-    const lang: string = "EN-en";
-    const parentID: string = "defaultEvent";
-    const newPageID: string = genUniqueId();
-
-    const createPageResult = async () => {
-        await client.models.Page.create({
-            pageID: newPageID,
-            owner: parentID,
-            pageTitle: title,
-            pageContent: content,
-            language: lang,
-            jsonobject: ''
-        })
-    }
-}
-
 function CreateNewPage() {
+    function saveNewPage() {
+        const title: string = (document.getElementById('titleTextField') as HTMLInputElement).value;
+        const content: string = (document.getElementById('contentTextField') as HTMLInputElement).value;
+        const lang: string = "EN-en";
+        const parentID: string = "defaultEvent";
+        const newPageID: string = genUniqueId();
+    
+        const createPageResult = async () => {
+            await client.models.Page.create({
+                pageID: newPageID,
+                owner: parentID,
+                pageTitle: title,
+                pageContent: content,
+                language: lang,
+                jsonobject: ''
+            })
+        }
+    }
+    
     return (
         <>
             <TextField
@@ -52,7 +56,7 @@ function CreateNewPage() {
                 variant='outlined'
                 defaultValue={''}
             />
-            <Button variant="contained" onClick={(event) => { SaveNewPage }}>Create New Page</Button>
+            <Button variant="contained" onClick={(event) => { saveNewPage }}>Create New Page</Button>
         </>
     )
 }
