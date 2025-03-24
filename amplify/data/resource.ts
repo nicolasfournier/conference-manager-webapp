@@ -56,8 +56,8 @@ const schema = a.schema({
     roleManager: a.string().array(),
     contentsEditor: a.string().array(),
     location: a.string(),
-    pages: a.hasMany('Page', 'pageID'),
-    products: a.hasMany('Product', 'productID'),
+    pages: a.hasMany('Page', 'parentevent'),
+    products: a.hasMany('Product', 'parentevent'),
     theme: a.string(),
     availableLanguages: a.string().array(),
     language: a.string(),
@@ -68,7 +68,8 @@ const schema = a.schema({
 
   Page: a.model({
     pageID: a.id().required(),
-    partOfEvent: a.belongsTo('Event', 'eventID'),
+    parentevent: a.id(),
+    belongstoevent: a.belongsTo('Event', 'parentevent'),
     pageTitle: a.string(),
     pageContent: a.string(),
     language: a.string(),
@@ -79,7 +80,8 @@ const schema = a.schema({
 
   Product: a.model({
     productID: a.id().required(),
-    partOfEvent: a.belongsTo('Event', 'eventID'),
+    parentevent: a.id(),
+    belongstoevent: a.belongsTo('Event', 'parentevent'),
     title: a.string(),
     type: a.string(),
     description: a.string(),
@@ -91,11 +93,11 @@ const schema = a.schema({
     maxParticipants: a.integer(),
     registrationStartDate: a.date(),
     registrationEndDate: a.date(),
-    option: a.hasMany('Option', 'optionID'),
+    option: a.hasMany('Option', 'product'),
     minNumberOfOptionsToSelect: a.integer(),
     maxNumberOfOptionsToSelect: a.integer(),
-    submission: a.hasMany('SubmissionType', 'submissionTypeID'),
-    price: a.hasMany('Price', 'priceID'),
+    submission: a.hasMany('SubmissionType', 'product'),
+    price: a.hasMany('Price', 'product'),
     language: a.string(),
     jsonobject: a.string(),
   })
@@ -104,7 +106,8 @@ const schema = a.schema({
 
   Option: a.model({
     optionID: a.id().required(),
-    forProduct: a.belongsTo('Product', 'productID'),
+    product: a.id(),
+    belongstoProduct: a.belongsTo('Product', 'product'),
     description: a.string(),
     language: a.string(),
     jsonobject: a.string(),
@@ -114,7 +117,8 @@ const schema = a.schema({
 
   Price: a.model({
     priceID: a.id().required(),
-    forProduct: a.belongsTo('Product', 'productID'),
+    product: a.id(),
+    belongstoProduct: a.belongsTo('Product', 'product'),
     amount: a.float(),
     currency: a.string(),
     description: a.string(),
@@ -128,7 +132,8 @@ const schema = a.schema({
 
   SubmissionType: a.model({
     submissionTypeID: a.id().required(),
-    forProduct: a.belongsTo('Product', 'productID'),
+    product: a.id(),
+    belongstoProduct: a.belongsTo('Product', 'product'),
     submissionTypeName: a.string(),
     description: a.string(),
     required: a.boolean(),
@@ -138,7 +143,7 @@ const schema = a.schema({
     submissionDeadlineTime: a.time(),
     reviewDeadline: a.date(),
     acceptanceNotificationDate: a.date(),
-    submissions: a.hasMany('Submission', 'submissionID'),
+    submissions: a.hasMany('Submission', 'submissionType'),
     language: a.string(),
     jsonobject: a.string(),
   })
@@ -147,14 +152,15 @@ const schema = a.schema({
 
   Submission: a.model({
     submissionID: a.id().required(),
-    submissionType: a.belongsTo('SubmissionType', 'submissionTypeID'),
+    submissionType: a.id(),
+    belongstosubmissionType: a.belongsTo('SubmissionType', 'submissionType'),
     title: a.string(),
     contributor: a.string(),
     originalFilename: a.string(),
     documentLink: a.url(),
     filingDate: a.date(),
     filingTime: a.time(),
-    review: a.hasMany('Review', 'reviewID'),
+    review: a.hasMany('Review', 'submission'),
     accepted: a.boolean(),
     language: a.string(),
     jsonobject: a.string(),
@@ -164,7 +170,8 @@ const schema = a.schema({
 
   Review: a.model({
     reviewID: a.id().required(),
-    submission: a.belongsTo('Submission', 'submissionID'),
+    submission: a.id(),
+    belongstosubmission: a.belongsTo('Submission', 'submission'),
     reviewer: a.string(),
     review: a.string(),
     filingDate: a.date(),
