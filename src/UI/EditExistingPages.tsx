@@ -14,8 +14,6 @@ import { generateClient } from "aws-amplify/data";
 const client = generateClient<Schema>();
 /*-----------------------------*/
 
-
-
 function EditExistingPages() {
     const [pages, setPages] = useState<Schema["Page"]["type"][]>([]);
     useEffect(() => {
