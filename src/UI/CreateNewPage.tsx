@@ -22,13 +22,13 @@ function CreateNewPage() {
         const title: string = (document.getElementById('titleTextField') as HTMLInputElement).value;
         const content: string = (document.getElementById('contentTextField') as HTMLInputElement).value;
         const lang: string = "EN-en";
-        const parentID: string = "defaultEvent";
+        const parentID: string = /* still need to write code to get parentID */;
         const newPageID: string = genUniqueId();
     
         const createPageResult = async () => {
             await client.models.Page.create({
                 pageID: newPageID,
-                owner: parentID,
+                parentevent: parentID,
                 pageTitle: title,
                 pageContent: content,
                 language: lang,

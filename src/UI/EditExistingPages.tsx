@@ -36,7 +36,7 @@ function EditExistingPages() {
         const updatedOperationResults = async () => {
             await client.models.Page.update({
                 pageID: existingPageID,
-                owner: parentID,
+                parentevent: parentID,
                 pageTitle: title,
                 pageContent: content,
                 language: lang,
@@ -48,7 +48,7 @@ function EditExistingPages() {
 
     return (
         <>
-            {pages.map(({ pageID, partOfEvent, pageTitle, pageContent, language }, index) => (
+            {pages.map(({ pageID, belongstoevent, pageTitle, pageContent, language }, index) => (
                 <>
                     <TextField
                         disabled
@@ -66,7 +66,7 @@ function EditExistingPages() {
                         rows={1}
                         fullWidth
                         variant='outlined'
-                        defaultValue={partOfEvent}
+                        defaultValue={belongstoevent}
                     />
                     <TextField
                         id='pageTitleTextField-${index}'
