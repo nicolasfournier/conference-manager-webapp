@@ -20,8 +20,13 @@ function EditEventData() {
     const [events, setEvents] = useState<Schema["Event"]["type"][]>([]);
     const [selectedEvent, setSelectedEvent] = useState(0);
     useEffect(() => {
-        fetchEvents();
+        fetchAllEventsFromDB();
     }, []);
+
+    async function fetchAllEventsFromDB() {
+        const { data: events, errors } = await client.models.Event.list();
+        setEvents(events);
+    };
 
     function genUniqueId(): string {
         return `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 8)}`;
@@ -30,7 +35,8 @@ function EditEventData() {
     function saveEventData(createNew: boolean) {
         /* need to write code to distinguish the different TextFields - thre is a way to get all HTMLElements of the same type and access them as an array.  Or add an index at the end of each name */
         const setID = (document.getElementById('eventTitleTextField') as HTMLInputElement).value;
-        const neweventID: string = ((createNew || setID === '') ? genUniqueId() : setID);
+        createNew = createNew || (setID === '');
+        const neweventID: string = (createNew ? genUniqueId() : setID);
         const eventTitle: string = (document.getElementById('eventTitleTextField') as HTMLInputElement).value;
         const type: string = (document.getElementById('eventTypeTextField') as HTMLInputElement).value;
         const eventChair: string = (document.getElementById('eventChairTextField') as HTMLInputElement).value;
@@ -76,10 +82,6 @@ function EditEventData() {
         }
         console.log('written');
     }
-    async function fetchEvents() {
-        const { data: events, errors } = await client.models.Event.list();
-        setEvents(events);
-    };
 
     function findEventIndexByID(givenEventID: string) {
         var foundIndex = -1;
